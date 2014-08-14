@@ -1,2 +1,8 @@
-Just a test.
+This project is just a simple library to perform a simple, yet apparently not readily available trick: grab a list of bacterial NCBI GI protein acession numbers and get sequence for their coding sequence. The motivation for the library is to get the upstream sequence, but it should be fairly easy to tweak in order to get any chunk of sequence relative to the CDS.
+
+The library relies on the BioPython NCBI eUtils interface for querying NCBI. For fun, the library is implemented with or without using the SeqIO module to parse GenBank files. The non-SeqIO version just downloads XML and parses it "manually", whereas the SeqIO version downloads gbk and uses SeqIO parsing to get to the data. One hopes that this duplicity will make the library more resilient to changes in NCBI format (it should if SeqIO is kept up to date with those).
+
+For each GI, all the library does, essentially, is to fetch the associated protein record, look for the CDS tag there and obtain the genomic coordinates. It then queries NCBI to download those specific coordinates (plus/minus whatever intervals specified) and some metadata in plain old FASTA format.
+
+The library, as it is now, will not work for the new WP_ RefSeq accession numbers. These are nucleotide independent protein records devised to minimize redundancy and thus lack a CDS tag. An obvious extension is therefore to extend the library so that it navigates NCBI and finds an arbitrary nucleotide record associated with the WP_ protein accession and gets the data from there, although one is left wondering whether that would be kosher or not (given that an arbitrary coding sequence would be chosen: this is fair within the CDS, since all sequences are equal, but not once we extend beyond the limits of the coding sequence, where equivalence is not guaranteed).
 
